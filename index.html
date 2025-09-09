@@ -3,51 +3,74 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Demo Landing Page</title>
+  <title>Amisha AI - Payment Demo</title>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e') no-repeat center center/cover;
+      background: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e')
+        no-repeat center center/cover;
       color: white;
       text-align: center;
       height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      background-attachment: fixed;
+      align-items: center;
     }
     h1 {
-      font-size: 3em;
-      margin-bottom: 20px;
+      font-size: 2.5rem;
+      margin-bottom: 10px;
       text-shadow: 2px 2px 5px black;
     }
     p {
-      font-size: 1.5em;
+      font-size: 1.2rem;
       margin-bottom: 30px;
-      text-shadow: 1px 1px 4px black;
     }
-    .btn {
-      display: inline-block;
-      padding: 15px 30px;
-      margin: 10px;
-      font-size: 1.2em;
-      color: white;
+    button {
+      padding: 12px 25px;
       background: #ff4081;
+      color: white;
       border: none;
-      border-radius: 5px;
-      text-decoration: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
       transition: 0.3s;
     }
-    .btn:hover {
-      background: #e91e63;
+    button:hover {
+      background: #e73370;
     }
   </style>
 </head>
 <body>
-  <h1>Welcome to My Demo Page</h1>
-  <p>Your journey starts here 🚀</p>
-  <a href="#" class="btn">Get Started</a>
-  <a href="#" class="btn">Learn More</a>
+  <h1>Welcome to Amisha AI</h1>
+  <p>Click below to test Razorpay Payment</p>
+  <button onclick="openCheckout()">Pay ₹50</button>
+
+  <script>
+    function openCheckout() {
+      var options = {
+        key: "rzp_test_XXXXXXXXX", // 🔹 यहाँ अपनी Test Key ID डालो
+        amount: 5000, // paise = ₹50
+        currency: "INR",
+        name: "Amisha AI",
+        description: "Test Transaction",
+        handler: function (response) {
+          alert("Payment Successful! ID: " + response.razorpay_payment_id);
+        },
+        prefill: {
+          name: "Test User",
+          email: "test@example.com",
+          contact: "9999999999",
+        },
+        theme: {
+          color: "#ff4081",
+        },
+      };
+      var rzp1 = new Razorpay(options);
+      rzp1.open();
+    }
+  </script>
 </body>
 </html>
