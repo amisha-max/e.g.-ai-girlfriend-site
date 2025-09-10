@@ -1,404 +1,102 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Amisha AI — Build & Chat (MVP)</title>
   <style>
-    :root{--pink:#ff4081;--soft:#f6f8fb;--muted:#6b7280}
-    body{margin:0;font-family:Inter,Arial,Helvetica,sans-serif;background:var(--soft);color:#111}
-    .container{max-width:980px;margin:20px auto;padding:18px}
-    .card{background:#fff;border-radius:12px;padding:18px;margin-bottom:18px;box-shadow:0 6px 20px rgba(11,22,39,0.04)}
-    header{display:flex;gap:12px;align-items:center}
-    .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,#ff8ab0,#ff4081);display:flex;align-items:center;justify-content:center;color:white;font-weight:700}
-    h1{margin:0;font-size:1.4rem}
-    .muted{color:var(--muted)}
-    .columns{display:grid;grid-template-columns:1fr 420px;gap:16px}
-    label{display:block;font-size:0.9rem;margin:8px 0 6px;color:#333}
-    input[type="text"], select {width:100%;padding:10px;border-radius:8px;border:1px solid #e3e7ee}
-    .row{display:flex;gap:8px;align-items:center}
-    .small{font-size:0.9rem;color:var(--muted)}
-    .btn{background:var(--pink);color:white;padding:10px 14px;border-radius:8px;border:none;cursor:pointer}
-    .btn.secondary{background:#2b6cff}
-    .avatar{width:100%;height:360px;border-radius:10px;background:linear-gradient(180deg,#ffdfe8,#ffc1e0);display:flex;flex-direction:column;align-items:center;justify-content:center; color:#1a1a1a; text-align:center;padding:12px; box-shadow: inset 0 -30px 60px rgba(0,0,0,0.02)}
-    .avatar .face{width:160px;height:160px;border-radius:80px;background:rgba(255,255,255,0.8);display:flex;align-items:center;justify-content:center;font-weight:700;color:#333;margin-bottom:10px;box-shadow:0 6px 18px rgba(10,10,10,0.06)}
-    .persona-meta{font-size:0.95rem;color:#222}
-    .pay-row{display:flex;gap:12px;align-items:center;margin-top:12px}
-    .pay-btn{background:var(--pink);color:white;padding:12px 18px;border-radius:8px;text-decoration:none;display:inline-block}
-    .status{font-weight:600}
-    .chat-window{height:300px;border-radius:10px;border:1px solid #e6e9ef;padding:12px;overflow:auto;background:#fff}
-    .msg{max-width:78%;padding:10px 12px;border-radius:12px;margin:8px 0;line-height:1.4}
-    .msg.user{background:#ffebf1;align-self:flex-end;margin-left:auto}
-    .msg.bot{background:#f2f6ff;color:#0b2a66}
-    .input-row{display:flex;gap:8px;margin-top:12px}
-    input.chat-input{flex:1;padding:10px 12px;border-radius:8px;border:1px solid #d8dde6}
-    .disabled{opacity:0.6;pointer-events:none}
-    .note{font-size:0.9rem;color:var(--muted);margin-top:10px}
-    .tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
-    .tag{padding:6px 10px;border-radius:999px;border:1px solid #e7eaf1;background:white;cursor:pointer}
-    .tag.active{background:#ffeef6;border-color:#ffb3d1}
-    footer.small{font-size:0.85rem;color:var(--muted);margin-top:12px}
-    @media (max-width:900px){ .columns{grid-template-columns:1fr; } .avatar{height:260px} }
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      background: #f6f8fb;
+      color: #333;
+    }
+    .container { max-width: 980px; margin: 20px auto; padding: 20px; }
+    h1 { text-align: center; color: #ff4081; }
+    .chat-box {
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 15px;
+      background: white;
+      height: 400px;
+      overflow-y: auto;
+    }
+    .msg { margin: 10px 0; }
+    .msg.user { text-align: right; color: #444; }
+    .msg.bot { text-align: left; color: #ff4081; }
+    .chat-input {
+      display: flex;
+      margin-top: 10px;
+    }
+    .chat-input input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    .chat-input button {
+      background: #ff4081;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      margin-left: 8px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="card">
-      <header>
-        <div class="logo">A</div>
-        <div>
-          <h1>Amisha AI — Build your companion (MVP)</h1>
-          <div class="muted">Create a persona, subscribe, and chat. (Demo / Test mode)</div>
-        </div>
-      </header>
+    <h1>💖 Amisha AI — Your Girlfriend Chat</h1>
+
+    <!-- Chat box -->
+    <div class="chat-box" id="chatBox">
+      <div class="msg bot">Hi, I'm Amisha 💕. How can I make your day better?</div>
     </div>
 
-    <div class="columns">
-      <!-- LEFT: Builder + Chat -->
-      <div>
-        <div class="card">
-          <h3>1) Build your girl</h3>
-          <div class="row" style="gap:12px;align-items:flex-start">
-            <div style="flex:1">
-              <label>Name</label>
-              <input id="name" type="text" placeholder="e.g. Amisha" />
-
-              <label>Height (cm)</label>
-              <input id="height" type="text" placeholder="e.g. 165" />
-
-              <label>Body type</label>
-              <select id="body">
-                <option value="Slim">Slim</option>
-                <option value="Athletic">Athletic</option>
-                <option value="Curvy">Curvy</option>
-                <option value="Average">Average</option>
-              </select>
-
-              <label>Skin tone</label>
-              <select id="skin">
-                <option value="Light">Light</option>
-                <option value="Olive">Olive</option>
-                <option value="Brown">Brown</option>
-                <option value="Dark">Dark</option>
-              </select>
-
-              <label>Accent</label>
-              <select id="accent">
-                <option value="Neutral">Neutral</option>
-                <option value="British">British</option>
-                <option value="American">American</option>
-                <option value="Indian">Indian</option>
-                <option value="Australian">Australian</option>
-              </select>
-
-              <label>Personality (pick tags)</label>
-              <div class="tags" id="tags">
-                <div class="tag" data-val="Romantic">Romantic</div>
-                <div class="tag" data-val="Playful">Playful</div>
-                <div class="tag" data-val="Shy">Shy</div>
-                <div class="tag" data-val="Sexy">Sexy</div>
-                <div class="tag" data-val="Flirty">Flirty</div>
-                <div class="tag" data-val="Caring">Caring</div>
-              </div>
-
-              <div style="margin-top:12px">
-                <button id="savePersona" class="btn">Save Persona</button>
-                <button id="resetPersona" class="btn" style="background:#6b7280;margin-left:8px">Reset</button>
-              </div>
-
-              <div class="note">Note: This demo stores persona in your browser (localStorage). For accounts/multiple devices use a DB later.</div>
-            </div>
-
-            <div style="width:340px">
-              <div class="avatar" id="avatar">
-                <div class="face" id="avatarFace">A</div>
-                <div style="font-weight:700;font-size:1.05rem" id="avatarName">Amisha</div>
-                <div class="persona-meta" id="avatarMeta">165 cm • Slim • Olive • British</div>
-
-                <div style="margin-top:12px">
-                  <small class="small">Preview avatar (stylized placeholder)</small>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <h3>2) Chat (unlock by subscribing)</h3>
-          <div style="display:flex;gap:12px;align-items:center">
-            <div id="payStatus" class="status">Not Subscribed</div>
-            <div class="muted" style="margin-left:auto">Subscription gives full chat access</div>
-          </div>
-
-          <div class="note" style="margin-top:8px">If you paid via payment link and returned to this site, add <code>?paid=1</code> to URL or click "I paid" to unlock (demo).</div>
-
-          <div style="margin-top:12px">
-            <div id="chatWindow" class="chat-window" style="display:flex;flex-direction:column"></div>
-
-            <div class="input-row" style="margin-top:10px">
-              <input id="chatInput" class="chat-input" placeholder="Please subscribe to enable chat" disabled />
-              <button id="sendBtn" class="btn secondary" disabled>Send</button>
-            </div>
-
-            <div style="margin-top:8px;display:flex;gap:8px">
-              <a id="payBtn" class="pay-btn" href="https://rzp.io/rzp/cJG5jOkk" target="_blank" rel="noopener noreferrer">Pay ₹50 (Subscribe)</a>
-              <button id="paidManual" class="btn" style="background:#10b981">I paid (demo)</button>
-            </div>
-
-          </div>
-        </div>
-      </div>
-
-      <!-- RIGHT: quick summary + instructions -->
-      <div>
-        <div class="card">
-          <h3>Quick summary</h3>
-          <p class="small">This is the MVP flow:</p>
-          <ol class="small">
-            <li>Create persona → Save (stored locally)</li>
-            <li>Click Pay → complete test payment on Razorpay</li>
-            <li>Return to this page with <code>?paid=1</code> or click "I paid"</li>
-            <li>Chat unlocked — use chat box (mock AI replies)</li>
-          </ol>
-          <div style="margin-top:12px">
-            <strong>Important:</strong>
-            <div class="small" style="margin-top:6px">Replace the payment link with your LIVE link when KYC approved. Short link (`rzp.io/...`) is recommended.</div>
-          </div>
-        </div>
-
-        <div class="card">
-          <h3>Saved persona</h3>
-          <div id="savedPersona" class="small">No persona saved yet.</div>
-          <div style="margin-top:10px">
-            <button id="clearLocal" class="btn" style="background:#ef4444">Clear Local Data</button>
-          </div>
-        </div>
-
-        <div class="card">
-          <h3>Notes & Next</h3>
-          <div class="small">
-            • This demo uses mock AI replies. To add real AI, you'll need a small backend to call OpenAI (so API key stays secret).<br>
-            • To auto-verify payments use Razorpay webhooks + small serverless function (Vercel). I can provide that next.<br>
-            • For multi-device accounts use Supabase/Firebase to store personas & subscriptions.
-          </div>
-        </div>
-      </div>
+    <!-- Input -->
+    <div class="chat-input">
+      <input type="text" id="userInput" placeholder="Say hi to Amisha..."/>
+      <button onclick="sendMessage()">Send</button>
     </div>
-
-    <footer class="small" style="text-align:center;margin-top:14px">MVP Demo • Keep content responsible — block minors & illegal requests</footer>
   </div>
 
-<script>
-/* ====== Simple MVP logic: persona + localStorage + chat (mock) ====== */
+  <script>
+    async function sendMessage() {
+      const input = document.getElementById("userInput");
+      const chatBox = document.getElementById("chatBox");
+      const text = input.value.trim();
+      if (!text) return;
 
-const defaultPersona = {
-  name: 'Amisha',
-  height: '165',
-  body: 'Slim',
-  skin: 'Olive',
-  accent: 'British',
-  tags: ['Romantic','Flirty']
-};
+      // Show user message
+      const userMsg = document.createElement("div");
+      userMsg.className = "msg user";
+      userMsg.innerText = text;
+      chatBox.appendChild(userMsg);
 
-// elements
-const nameEl = document.getElementById('name');
-const heightEl = document.getElementById('height');
-const bodyEl = document.getElementById('body');
-const skinEl = document.getElementById('skin');
-const accentEl = document.getElementById('accent');
-const tagsWrap = document.getElementById('tags');
-const saveBtn = document.getElementById('savePersona');
-const resetBtn = document.getElementById('resetPersona');
-const avatarFace = document.getElementById('avatarFace');
-const avatarName = document.getElementById('avatarName');
-const avatarMeta = document.getElementById('avatarMeta');
-const savedPersonaEl = document.getElementById('savedPersona');
+      input.value = "";
+      chatBox.scrollTop = chatBox.scrollHeight;
 
-const payStatusEl = document.getElementById('payStatus');
-const payBtn = document.getElementById('payBtn');
-const paidManual = document.getElementById('paidManual');
-const chatWindow = document.getElementById('chatWindow');
-const chatInput = document.getElementById('chatInput');
-const sendBtn = document.getElementById('sendBtn');
+      // Call API
+      const botMsg = document.createElement("div");
+      botMsg.className = "msg bot";
+      botMsg.innerText = "Typing...";
+      chatBox.appendChild(botMsg);
 
-// utility to read URL param
-function getParam(name){
-  try{
-    const url = new URL(window.location.href);
-    return url.searchParams.get(name);
-  }catch(e){ return null; }
-}
+      try {
+        const res = await fetch("/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: text })
+        });
+        const data = await res.json();
+        botMsg.innerText = data.reply || "Sorry, I couldn’t reply 😢";
+      } catch (err) {
+        botMsg.innerText = "Error connecting to server ❌";
+      }
 
-// load persona from localStorage
-function loadPersona(){
-  const raw = localStorage.getItem('mvp_persona');
-  if(!raw) return defaultPersona;
-  try{ return JSON.parse(raw); }catch(e){ return defaultPersona; }
-}
-
-// save persona
-function savePersona(p){
-  localStorage.setItem('mvp_persona', JSON.stringify(p));
-}
-
-// render persona UI & preview
-function renderPersona(p){
-  nameEl.value = p.name || '';
-  heightEl.value = p.height || '';
-  bodyEl.value = p.body || '';
-  skinEl.value = p.skin || '';
-  accentEl.value = p.accent || '';
-
-  // tags UI
-  const tagEls = tagsWrap.querySelectorAll('.tag');
-  tagEls.forEach(t=>{
-    const val = t.getAttribute('data-val');
-    if(p.tags && p.tags.includes(val)) t.classList.add('active'); else t.classList.remove('active');
-  });
-
-  avatarFace.textContent = (p.name && p.name[0]) ? p.name[0].toUpperCase() : 'A';
-  avatarName.textContent = p.name || 'Amisha';
-  avatarMeta.textContent = `${p.height || '165'} cm • ${p.body || 'Slim'} • ${p.skin || 'Olive'} • ${p.accent || 'British'}`;
-
-  savedPersonaEl.textContent = `Name: ${p.name} — ${p.height} cm • ${p.body} • ${p.skin} • ${p.accent} • Tags: ${(p.tags||[]).join(', ')}`;
-}
-
-// read tags click
-tagsWrap.addEventListener('click', (e)=>{
-  const t = e.target.closest('.tag');
-  if(!t) return;
-  t.classList.toggle('active');
-});
-
-// assemble persona from UI
-function assemblePersona(){
-  const tagEls = tagsWrap.querySelectorAll('.tag.active');
-  const tags = Array.from(tagEls).map(x=>x.getAttribute('data-val'));
-  return {
-    name: nameEl.value.trim() || 'Amisha',
-    height: heightEl.value.trim() || '165',
-    body: bodyEl.value,
-    skin: skinEl.value,
-    accent: accentEl.value,
-    tags
-  };
-}
-
-// save button
-saveBtn.addEventListener('click', ()=>{
-  const p = assemblePersona();
-  savePersona(p);
-  renderPersona(p);
-  alert('Persona saved locally ✅');
-});
-
-// reset
-resetBtn.addEventListener('click', ()=>{
-  if(confirm('Reset persona to default?')) {
-    savePersona(defaultPersona);
-    renderPersona(defaultPersona);
-  }
-});
-
-// clear local data
-document.getElementById('clearLocal').addEventListener('click', ()=>{
-  if(confirm('Clear saved persona and paid status from this browser?')) {
-    localStorage.removeItem('mvp_persona');
-    localStorage.removeItem('mvp_paid');
-    renderPersona(defaultPersona);
-    setPaidState(false);
-    alert('Local data cleared.');
-  }
-});
-
-// ====== Paid state logic ======
-function isPaidLocal(){
-  return localStorage.getItem('mvp_paid') === '1';
-}
-function setPaidLocal(val){
-  localStorage.setItem('mvp_paid', val ? '1':'0');
-}
-function setPaidState(paid){
-  if(paid){
-    payStatusEl.textContent = 'Subscribed ✓';
-    payBtn.classList.add('disabled');
-    payBtn.style.pointerEvents = 'none';
-    chatInput.disabled = false;
-    sendBtn.disabled = false;
-    chatInput.placeholder = 'Say hi to your companion...';
-  } else {
-    payStatusEl.textContent = 'Not Subscribed';
-    payBtn.classList.remove('disabled');
-    payBtn.style.pointerEvents = 'auto';
-    chatInput.disabled = true;
-    sendBtn.disabled = true;
-    chatInput.placeholder = 'Please subscribe to enable chat';
-  }
-}
-
-// on manual "I paid" demo button
-paidManual.addEventListener('click', ()=>{
-  if(confirm('Mark as paid for demo? (This is local demo only)')){
-    setPaidLocal(true);
-    setPaidState(true);
-    alert('Marked paid locally. Chat unlocked.');
-  }
-});
-
-// chat simple functions
-function appendMessage(text, who='bot'){
-  const d = document.createElement('div');
-  d.className = 'msg ' + (who==='user' ? 'user':'bot');
-  d.textContent = text;
-  chatWindow.appendChild(d);
-  chatWindow.scrollTop = chatWindow.scrollHeight;
-}
-
-function aiReplyMock(userText, persona){
-  const t = userText.toLowerCase();
-  if(t.includes('hi') || t.includes('hello')) return `Hi ${persona.name || 'there'} — I'm ${persona.name}. How can I make your day better?`;
-  if(t.includes('name')) return `My name is ${persona.name}.`;
-  if(t.includes('love')) return `Aww, you are sweet. I like talking with you 💕`;
-  if(t.includes('height')) return `${persona.name} is ${persona.height} cm tall 😉`;
-  if(t.includes('joke')) return "Why did the developer go broke? Because he used up all his cache 😅";
-  // default echo + persona touch
-  return `${persona.name} heard: "${userText}". (This is a demo reply — integrate a real AI for natural chat.)`;
-}
-
-sendBtn.addEventListener('click', ()=>{
-  const txt = chatInput.value.trim();
-  if(!txt) return;
-  appendMessage(txt, 'user');
-  chatInput.value = '';
-  const persona = loadPersona();
-  setTimeout(()=> {
-    const reply = aiReplyMock(txt, persona);
-    appendMessage(reply, 'bot');
-  }, 600);
-});
-chatInput.addEventListener('keydown', (e)=>{
-  if(e.key === 'Enter') sendBtn.click();
-});
-
-// on load: restore persona + paid
-(function init(){
-  const persona = loadPersona();
-  renderPersona(persona);
-
-  // if URL has ?paid=1 (returned after payment) then mark as paid local (demo)
-  const paidParam = getParam('paid');
-  if(paidParam === '1' || paidParam === 'true') {
-    setPaidLocal(true);
-  }
-  // apply paid state
-  setPaidState(isPaidLocal());
-  // initial chat message
-  if(isPaidLocal()){
-    appendMessage(`Welcome back — your subscription is active. Say hi to ${persona.name}!`, 'bot');
-  } else {
-    appendMessage(`Welcome! Create a persona and subscribe to chat.`, 'bot');
-  }
-})();
-</script>
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+  </script>
 </body>
 </html>
